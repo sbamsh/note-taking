@@ -26,6 +26,9 @@ function addNewNote(){
         let noteItem = new Note(noteID, noteTitle.value, noteContent.value);
         noteID++;
         notes.push(noteItem);
+        createNote(noteItem);
+        noteTitle.value = "";
+        noteContent.value = "";
     }
 }
 
@@ -34,7 +37,7 @@ function addNewNote(){
 function validateInput(title, content){
     if(title.value !== "" && content.value !== ""){
         return true;
-    }else {
+    } else {
         if(title.value === "") title.classList.add('warning');
         if(content.value === "") content.classList.add('warning');
     }
@@ -42,5 +45,22 @@ function validateInput(title, content){
         title.classList.remove('warning');
         content.classList.remove('warning');
     }, 1500)
+}
+
+
+// create a new note div (5)
+function createNote(noteItem){
+    const div = document.createElement('div');
+    div.classList.add('note-item');
+    div.setAttribute('data-id', noteItem.id);
+    div.innerHTML = `
+         <h3>${noteItem.title}</h3>
+         <p>${noteItem.content}</p>
+         <button type = "button" class = "btn delete-note-btn">
+         <span><i class = "fas fa-trash"></i></span>
+         Remove
+         </button>
+    `;
+    noteListDiv.appendChild(div);
 }
 
