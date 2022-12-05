@@ -10,11 +10,18 @@ function Note(id, title, content){
 
 // all eventlisteners (2)
 function eventlisteners(){
+    document.addEventListener('DOMContentLoaded', displayNotes);
     document.getElementById('add-note-btn').addEventListener
     ('click', addNewNote);
 }
 
 eventlisteners();
+
+// get items form storage (6)
+function getDataFromStorage(){
+    return localStorage.getItem('notes') ? JSON.parse
+    (localStorage.getItem('notes')) : [];
+}
 
 
 // add a new note in the list (3)
@@ -22,11 +29,13 @@ function addNewNote(){
     const noteTitle = document.getElementById('note-title');
     const noteContent = document.getElementById('note-content');
     if(validateInput(noteTitle, noteContent)){
-        let notes = [];
+        let notes = getDataFromStorage();
         let noteItem = new Note(noteID, noteTitle.value, noteContent.value);
         noteID++;
         notes.push(noteItem);
         createNote(noteItem);
+        // saving in the local storage
+        localStorage.setItem('notes', JSON.stringify(notes));
         noteTitle.value = "";
         noteContent.value = "";
     }
@@ -64,3 +73,16 @@ function createNote(noteItem){
     noteListDiv.appendChild(div);
 }
 
+// display all the notes form the local storage (7)
+function displayNotes(){
+    let notes = getDataFromStorage();
+    if(notes.length > 0){
+        noteID = notes[notes.length - 1].id;
+        noteID++
+    } else {
+        noteID = 1;
+    }
+    notes.forEach(item => {
+        createNote(item);
+    });
+}
