@@ -13,6 +13,8 @@ function eventlisteners(){
     document.addEventListener('DOMContentLoaded', displayNotes);
     document.getElementById('add-note-btn').addEventListener
     ('click', addNewNote);
+    noteListDiv.addEventListener('click' , deleteNote);
+    document.getElementById('delete-all-btn').addEventListener('click', deleteAllNotes);
 }
 
 eventlisteners();
@@ -85,4 +87,29 @@ function displayNotes(){
     notes.forEach(item => {
         createNote(item);
     });
+}
+
+// delete a note (8)
+function deleteNote(e){
+    if(e.target.classList.contains('delete-note-btn')){
+        e.target.parentElement.remove(); // removing from DOM
+        let divID = e.target.parentElement.dataset.id;
+        let notes = getDataFromStorage();
+        let newNotesList = notes.filter(item => {
+            return item.id != parseInt(divID);
+        });
+        localStorage.setItem('notes', JSON.stringify(newNotesList));
+    }
+}
+
+// delete all notes (9)
+function deleteAllNotes(){
+    localStorage.removeItem('notes');
+    let noteList = document.querySelectorAll('.note-item');
+    if(noteList.length > 0){
+        noteList.forEach(item => {
+            noteListDiv.removeChild(item);
+        });
+    }
+    noteID = 1;  // resetting noteID to 1
 }
